@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐播放器</title>
+    <link rel="stylesheet" type="text/css" href="css/album.css"/>
+    <link rel="stylesheet" type="text/css" href="css/hrefcolor.css"/>
+</head>
+
+<body>
+    <!-- 选择音乐组件 -->
+    <div class="select">
+        选择播放的歌曲
+        <input type="file" id="musicfile" class="upload" accept=".mp3,.mp4">
+    </div>
+    
+    <!-- 音乐播放器组件 -->
+    <canvas class="canvas" id="canvas" width="600" height="600"></canvas>
+    <div id="album" style="color:rgba(0, 255, 229, 0.422)">
+    <a href="#">Music Player</a>
+    </div>
+
+    <!-- 背景视频点击响应按钮 -->
+    <div style="text-align:center " > 
+        <button class="tree" onclick="playPause()">播放/暂停:树生长</button> 
+        <br> 
+
+    <!-- 背景视频组件 -->
+        <video autoplay loop  id="video1">
+        <source aus.mute="false" src="video/magic.mp4" type="video/mp4" />
+      </video>
+</body>
+
+
+
+
+
+<script>
+    // 背景视频播放开关
+    var myVideo=document.getElementById("video1"); 
+
+    function playPause()
+{ 
+	if (myVideo.paused) 
+	  myVideo.play(); 
+	else 
+	  myVideo.pause(); 
+} 
+
+
+    //可视化音乐图谱
+    const audioContext = new AudioContext();
+    const musicfile = document.getElementById('musicfile');
+    const album = document.getElementById('album');
+    const canvas = document.getElementById('canvas')
+    const selectdiv = document.getElementsByClassName('select')[0];
+    selectdiv.addEventListener('click', function () {
+        // var mouseEvent = document.createEvent("MouseEvents");
+        // mouseEvent.initEvent("click", true, true);
+        // musicfile.dispatchEvent(mouseEvent);
+        musicfile.click()
+    })
+    musicfile.addEventListener('change', function () {
+        var file = this.files[0];
+        console.log(file)
+        var fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file)
+        var count = 0;
+        fileReader.onload = function (event) {
+            album.classList.add('album-active')
+            console.log(event.target.result)
+            var filebuffer = event.target.result;
+            audioContext.decodeAudioData(filebuffer).then((filestream) => {
+                console.log(filestream)
+                /* 
+                    需要将音频文件解码成二进制流文件，这个流文件即为音频资源buffer播放源
+                    之后需要将buffer播放源与分析器相连，分析器与扬声器相连，（扬声器为 audioContext.destination）
+                    audioContext.destination:
+                    返回AudioDestinationNode对象，表示当前audio context中所有节点的最终节点，一般表示音频渲染设备。
+                */
+                var audioBufferSourceNode = audioContext.createBufferSource();
+                var analyser = audioContext.createAnalyser();
+                analyser.fftSize = 512;
+                audioBufferSourceNode.connect(analyser);
+                analyser.connect(audioContext.destination);
+                audioBufferSourceNode.buffer = filestream;
+                audioBufferSourceNode.start();
+                //frequencyBinCount 的值固定为 AnalyserNode 接口中fftSize值的一半. 该属性通常用于可视化的数据值的数量.
+                // var bufferLength = analyser.fftSize;
+                var bufferLength = analyser.frequencyBinCount;
+                var dataArray = new Uint8Array(bufferLength);
+                console.log(dataArray)
+                var ctx = canvas.getContext('2d')
+
+                // 环状频谱图
+                const PI = 3.14;
+                var cwidth = canvas.width;
+                var cheight = canvas.height;
+                var rectWidth = 5;
+                var cR = 230; //半径
+                var rectCount = 180;
+
+                ctx.fillStyle = ' rgba(80, 124, 177, 0.274)';
+                var render = function () {
+                    analyser.getByteFrequencyData(dataArray);
+                    var step = Math.round(dataArray.length / rectCount);
+                    ctx.clearRect(0, 0, cwidth, cheight);
+                    ctx.save();
+                    // ctx.translate(cwidth/2,cheight/2);
+                    ctx.translate(cwidth / 2, cheight / 2);
+                    for (let i = 0; i < rectCount; i++) {
+                        if (i < 50) {
+                            var value = dataArray[(rectCount - i - 20) * step];
+                        } else {
+                            var value = dataArray[i * step];
+                        }
+                        // console.log(i, value)
+                        var rectHeight = ((cheight / 2 - cR) * value / 256) || 2
+                        // ctx.fillRect(x,y,width,height);
+                        ctx.rotate(2 * PI / rectCount);
+                        ctx.fillRect(-rectWidth / 2, -cR - rectHeight, rectWidth, rectHeight);
+                    }
+                    ctx.restore();
+                    requestAnimationFrame(render);
+                }
+                render()
+            })
+        };
+    })
+</script>
+
+
+
+
+
+
+
+</html>

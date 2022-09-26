@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/plane.css">
+    <link rel="stylesheet" href="css/input.css">
+    <title>音乐登录界面</title>
+    
+</head>
+
+<body>
+  
+    <div>
+        <span class="title">Music Player</span>
+        <div class="input-box">
+            <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+            <input type="text" placeholder="您的邮箱地址">
+            <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+            <input type="password" placeholder="请输入密码" id="password">
+            <a href="second.html" >
+
+                <button onclick="login()">登录</button>     
+                
+            </a>
+         <span class="title_1">忘记密码?
+             <a class="#" href="https://accounts.qq.com/find/password">点击这里</a>
+         </span>  
+        <span class="title_2">没有账号?
+            <a class="#" href="https://ssl.zc.qq.com/v3/index-chs.html?from=pt">注册</a>
+        </span>                 
+        </div>
+        
+          <div class="list-group">
+            <a class="list-group-item" href="https://y.qq.com/"><i class="fa fa-home fa-fw" aria-hidden="true"></i>&nbsp; 首页</a></br>
+            <a class="list-group-item" href="https://www.tencent.com/zh-cn/"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; 关于我们</a></br>
+            <a class="list-group-item" href="#"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i>&nbsp; 后台应用编辑</a></br>
+            <a class="list-group-item" href="#"><i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; 系统设置</a></br>
+          </div>
+</br></br></br>
+         <p style="text-align: center;">&copy;<span>制作于2022-4-30 成都 成都东软学院</span></p>
+
+
+
+    <div id="plane">
+        <i class="fa fa-paper-plane" aria-hidden="true"></i>
+    </div>
+
+
+
+
+    <script>
+        let plane=document.getElementById('plane');
+        let deg=0,ex=0,ey=0,vx=0,vy=0,count=0;
+        window.addEventListener('mousemove',(e)=>{
+            ex=e.x-plane.offsetLeft-plane.clientWidth/2;
+            ey=e.y-plane.offsetTop-plane.clientHeight/2;
+            deg=360*Math.atan(ey/ex)/(2*Math.PI)+45;
+            if(ex<0){
+                deg+=180;
+            }
+            count=0;
+        })
+        function draw(){
+            plane.style.transform='rotate('+deg+'deg)';
+            if(count<100){
+                vx+=ex/100;
+                vy+=ey/100;
+            }
+            plane.style.left=vx+'px';
+            plane.style.top=vy+'px';
+            count++;
+        }
+        setInterval(draw, 1);
+
+        function login(){
+      alert("点击[确定]以登录音乐播放器");
+    }
+
+    </script>
+</body>
+
+</html>

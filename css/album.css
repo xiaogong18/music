@@ -1,0 +1,114 @@
+        @keyframes rotate1 {
+            from {
+                transform:translate(-50%,-50%)  rotate(0deg);
+
+            }
+
+            to {
+                transform: translate(-50%,-50%) rotate(360deg);
+            }
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        canvas {
+            /* border: 1px solid black; */
+            margin-top: 30px;
+        }
+
+        .select {
+            background: linear-gradient(200deg,#72afd3,#96fbc4);
+            position: absolute;
+            top: 0%;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.277);
+            border-radius: 2px;
+            transition: all .3s;
+            box-shadow: 0px 0px 10px 2px rgba(250, 250, 250, 0.09);
+            border-radius: 20px;
+        }
+
+        .select:hover {
+            border-color: rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.09);
+        }
+
+        .select:active {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            opacity: 0;
+            position: absolute;
+        }
+
+        #album {
+            position: absolute;
+            margin-top: 15px;
+            top: 50%;
+            left: 50%;
+            height: 440px;
+            width: 440px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 唱片背景 */
+            background-color: rgba(0, 229, 255, 0.389);
+            /* 唱片阴影 */
+            box-shadow: 0 0px 30px 10px #0011c87e;
+            font-size: 40px;
+            animation-timing-function: linear;
+            transform-origin: 50% 50%;
+   
+        }
+
+        .album-active {
+
+            animation: rotate1 3s infinite;
+        }
+
+
+
+
+
+        source {
+            min-width: 100%;
+            min-height: 100%;
+            height: auto;
+            width: auto;
+          }
+           
+          video {
+            object-fit:cover;
+            position: fixed;
+            right: 0px;
+            bottom: 0px;
+            min-width: 100%;
+            max-height: 100%;
+            height: auto;
+            width: auto;
+            background-size: cover;
+            /*加滤镜*/
+            /* filter: blur(15px); //背景模糊设置 */
+            /*-webkit-filter: grayscale(100%);*/
+            /*filter:grayscale(100%); //背景灰度设置*/
+            z-index: -1;
+          }
+
+       .tree{
+        background: linear-gradient(200deg,#72afd3,#96fbc4);
+        color:rgba(38, 48, 193, 0.475);
+        border-radius : 20px;
+       }   
